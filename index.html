@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homagama Maha Vidyalaya - Excellence in Education</title>
+    <meta name="description" content="Homagama Maha Vidyalaya, located in Colombo district, is a beacon of education and excellence in Sri Lanka.">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3B82F6">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                    },
+                    fontFamily: {
+                        montserrat: ['Montserrat', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Typed.js -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    
+    <!-- Swiper.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Mapbox -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script>
+</head>
+<body class="font-inter bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+    <!-- Loading Animation -->
+    <div id="loader" class="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-50">
+        <div class="loader-container">
+            <div class="day-night-cycle"></div>
+            <div class="school-building"></div>
+            <h2 class="mt-4 text-xl font-montserrat font-bold text-primary">Homagama Maha Vidyalaya</h2>
+            <div class="loading-bar mt-4">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 transition-all duration-300" x-data="{ isOpen: false, isScrolled: false }" 
+            :class="{ 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md': isScrolled || isOpen, 'bg-transparent': !isScrolled && !isOpen }"
+            @scroll.window="isScrolled = window.pageYOffset > 20">
+            
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">HMV</div>
+                <span class="text-xl font-bold font-montserrat hidden sm:block">Homagama Maha Vidyalaya</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#news" class="nav-link">News</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+                
+                <!-- Mobile Menu Button -->
+                <button @click="isOpen = !isOpen" class="block md:hidden hamburger focus:outline-none" :class="{'is-active': isOpen}">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div class="md:hidden" x-show="isOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" @click.away="isOpen = false">
+            <nav class="container mx-auto px-4 py-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-b-xl flex flex-col space-y-4">
+                <a href="#" class="mobile-nav-link active">Home</a>
+                <a href="#about" class="mobile-nav-link">About</a>
+                <a href="#gallery" class="mobile-nav-link">Gallery</a>
+                <a href="#news" class="mobile-nav-link">News</a>
+                <a href="#contact" class="mobile-nav-link">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 md:py-32 lg:min-h-screen flex items-center relative overflow-hidden">
+        <!-- Background Effect -->
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 pointer-events-none"></div>
+        
+        <!-- 3D Model Container -->
+        <div class="absolute right-0 top-0 w-full h-full opacity-20 pointer-events-none z-0" id="hero-model"></div>
+        
+        <div class="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center z-10">
+            <div class="space-y-6">
+                <h1 class="text-4xl md:text-6xl font-bold font-montserrat leading-tight">
+                    Welcome to <span class="text-primary">Homagama</span> Maha Vidyalaya
+                </h1>
+                <div class="h-12">
+                    <span id="typed-text" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300"></span>
+                </div>
+                <p class="text-lg text-gray-600 dark:text-gray-300">
+                    Located on Athurugiriya Road in Homagama, we provide quality education to 2,376 students from Grades 1 to 11.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#about" class="btn-primary">Learn More</a>
+                    <a href="#contact" class="btn-secondary">Contact Us</a>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="pt-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="stat-card">
+                        <h3 class="stat-value" data-count="2376">0</h3>
+                        <p class="stat-label">Students</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="stat-value" data-count="11">0</h3>
+                        <p class="stat-label">Grades</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="stat-value" data-count="50">0</h3>
+                        <p class="stat-label">Teachers</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="stat-value" data-count="25">0</h3>
+                        <p class="stat-label">Awards</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative aspect-video rounded-xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500 glassmorphism">
+                <img src="https://source.unsplash.com/random/800x600/?school" alt="Homagama Maha Vidyalaya" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
+                    <div class="p-6">
+                        <h2 class="text-white text-2xl font-bold font-montserrat">A Beacon of Education</h2>
+                        <p class="text-white/80 mt-2">Shaping the leaders of tomorrow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">About Our School</h2>
+            <p class="section-subtitle">Nurturing minds, shaping futures</p>
+            
+            <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="space-y-6">
+                    <div class="prose dark:prose-invert max-w-none">
+                        <p class="text-lg">
+                            Homagama Maha Vidyalaya, located on Athurugiriya Road in Homagama, Colombo district, is a prominent educational institution under the Western Province of Sri Lanka. With its long-standing reputation for academic excellence and holistic development, the school serves as a cornerstone for the community.
+                        </p>
+                        <p>
+                            Established decades ago, Homagama Maha Vidyalaya has grown from humble beginnings into a thriving educational hub. The school offers classes from Grades 1 to 11, catering to students across various age groups with a student population of 2,376—comprising 1,221 male and 1,155 female students.
+                        </p>
+                        <p>
+                            Our curriculum is designed to balance academic rigor with extracurricular engagement, ensuring students receive a well-rounded education. We focus on developing not just knowledge, but also character, leadership, and social responsibility.
+                        </p>
+                    </div>
+                    
+                    <a href="#" class="btn-primary inline-block">Our History</a>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Academic Excellence</h3>
+                        <p class="feature-text">Comprehensive curriculum focused on student success</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Modern Facilities</h3>
+                        <p class="feature-text">State-of-the-art labs, library, and sports facilities</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Arts & Culture</h3>
+                        <p class="feature-text">Rich cultural programs and artistic development</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Sports Excellence</h3>
+                        <p class="feature-text">Comprehensive sports training and competition</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Section -->
+    <section id="leadership" class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Our Leadership</h2>
+            <p class="section-subtitle">Meet the visionaries guiding our institution</p>
+            
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Principal Card -->
+                <div class="staff-card">
+                    <div class="relative overflow-hidden rounded-t-xl aspect-square">
+                        <img src="https://source.unsplash.com/random/400x400/?principal" alt="Principal" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold font-montserrat">Dr. Amara Silva</h3>
+                        <p class="text-primary font-medium">Principal</p>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">With over 20 years of experience in education, Dr. Silva leads our institution with vision and dedication.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Deputy Principal 1 -->
+                <div class="staff-card">
+                    <div class="relative overflow-hidden rounded-t-xl aspect-square">
+                        <img src="https://source.unsplash.com/random/400x400/?teacher,woman" alt="Deputy Principal" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold font-montserrat">Mrs. Kumari Perera</h3>
+                        <p class="text-primary font-medium">Deputy Principal - Academics</p>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Dedicated to academic excellence, Mrs. Perera oversees curriculum development and teacher training.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Deputy Principal 2 -->
+                <div class="staff-card">
+                    <div class="relative overflow-hidden rounded-t-xl aspect-square">
+                        <img src="https://source.unsplash.com/random/400x400/?teacher,man" alt="Deputy Principal" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold font-montserrat">Mr. Lakshman Fernando</h3>
+                        <p class="text-primary font-medium">Deputy Principal - Administration</p>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">Mr. Fernando handles school operations, ensuring smooth functioning of all administrative processes.</p>
+                        <div class="mt-4 flex space-x-3">
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Our Gallery</h2>
+            <p class="section-subtitle">Glimpses of our vibrant school life</p>
+            
+            <div class="mt-8 flex justify-center space-x-4">
+                <button class="gallery-filter active" data-filter="all">All</button>
+                <button class="gallery-filter" data-filter="academic">Academic</button>
+                <button class="gallery-filter" data-filter="sports">Sports</button>
+                <button class="gallery-filter" data-filter="cultural">Cultural</button>
+            </div>
+            
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 gallery-container">
+                <div class="gallery-item academic">
+                    <div class="overflow-hidden rounded-xl aspect-video shadow-lg">
+                        <img src="https://source.unsplash.com/random/600x400/?classroom" alt="Classroom" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold">Modern Classrooms</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Well-equipped learning spaces</p>
+                </div>
+                
+                <div class="gallery-item sports">
+                    <div class="overflow-hidden rounded-xl aspect-video shadow-lg">
+                        <img src="https://source.unsplash.com/random/600x400/?sports,field" alt="Sports Field" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold">Sports Grounds</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Extensive facilities for outdoor activities</p>
+                </div>
+                
+                <div class="gallery-item cultural">
+                    <div class="overflow-hidden rounded-xl aspect-video shadow-lg">
+                        <img src="https://source.unsplash.com/random/600x400/?cultural,performance" alt="Cultural Event" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold">Cultural Performances</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Celebrating traditions and arts</p>
+                </div>
+                
+                <div class="gallery-item academic">
+                    <div class="overflow-hidden rounded-xl aspect-video shadow-lg">
+                        <img src="https://source.unsplash.com/random/600x400/?library" alt="Library" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold">Modern Library</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Extensive collection of books and resources</p>
+                </div>
+                
+                <div class="gallery-item sports">
+                    <div class="overflow-hidden rounded-xl aspect-video shadow-lg">
+                        <img src="https://source.unsplash.com/random/600x400/?volleyball" alt="Volleyball" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold">Volleyball Tournament</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Annual inter-class competitions</p>
+                </div>
+                
+                <div class="gallery-item cultural">
+                    <div class="overflow-hidden rounded-xl aspect-video shadow-lg">
+                        <img src="https://source.unsplash.com/random/600x400/?art,exhibition" alt="Art Exhibition" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <h3 class="mt-4 text-lg font-semibold">Art Exhibition</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Student artwork showcase</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <a href="#" class="btn-primary">View More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Latest News</h2>
+            <p class="section-subtitle">Stay updated with school events and announcements</p>
+            
+            <div class="mt-16">
+                <!-- Swiper Slider for News -->
+                <div class="swiper news-slider">
+                    <div class="swiper-wrapper">
+                        <!-- News Item 1 -->
+                        <div class="swiper-slide">
+                            <div class="news-card">
+                                <div class="relative overflow-hidden rounded-t-xl aspect-video">
+                                    <img src="https://source.unsplash.com/random/600x400/?students,celebration" alt="Annual Day" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                                    <div class="absolute top-4 left-4 bg-accent text-white text-sm font-semibold py-1 px-3 rounded-full">Event</div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        March 15, 2025
+                                    </div>
+                                    <h3 class="text-xl font-bold font-montserrat mb-2">Annual Day Celebration</h3>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-4">Join us for our Annual Day celebration featuring performances by students across all grades.</p>
+                                    <a href="#" class="text-primary font-semibold inline-flex items-center">
+                                        Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- News Item 2 -->
+                        <div class="swiper-slide">
+                            <div class="news-card">
+                                <div class="relative overflow-hidden rounded-t-xl aspect-video">
+                                    <img src="https://source.unsplash.com/random/600x400/?trophy,award" alt="Academic Achievement" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                                    <div class="absolute top-4 left-4 bg-primary text-white text-sm font-semibold py-1 px-3 rounded-full">Achievement</div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        March 10, 2025
+                                    </div>
+                                    <h3 class="text-xl font-bold font-montserrat mb-2">National Science Olympiad Winners</h3>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-4">Congratulations to our students who secured top positions in the National Science Olympiad.</p>
+                                    <a href="#" class="text-primary font-semibold inline-flex items-center">
+                                        Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- News Item 3 -->
+                        <div class="swiper-slide">
+                            <div class="news-card">
+                                <div class="relative overflow-hidden rounded-t-xl aspect-video">
+                                    <img src="https://source.unsplash.com/random/600x400/?meeting,education" alt="Parent Meeting" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                                    <div class="absolute top-4 left-4 bg-secondary text-white text-sm font-semibold py-1 px-3 rounded-full">Notice</div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        March 5, 2025
+                                    </div>
+                                    <h3 class="text-xl font-bold font-montserrat mb-2">Parent-Teacher Meeting</h3>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-4">The next parent-teacher meeting is scheduled for April 5. Please make arrangements to attend.</p>
+                                    <a href="#" class="text-primary font-semibold inline-flex items-center">
+                                        Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- News Item 4 -->
+                        <div class="swiper-slide">
+                            <div class="news-card">
+                                <div class="relative overflow-hidden rounded-t-xl aspect-video">
+                                    <img src="https://source.unsplash.com/random/600x400/?sports,competition" alt="Sports Day" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                                    <div class="absolute top-4 left-4 bg-accent text-white text-sm font-semibold py-1 px-3 rounded-full">Event</div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        February 28, 2025
+                                    </div>
+                                    <h3 class="text-xl font-bold font-montserrat mb-2">Annual Sports Meet</h3>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-4">Get ready for our Annual Sports Meet happening on April 12-14. All students are encouraged to participate.</p>
+                                    <a href="#" class="text-primary font-semibold inline-flex items-center">
+                                        Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Swiper Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    
+                    <!-- Swiper Pagination -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <a href="#" class="btn-secondary">View All News</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">We'd love to hear from you</p>
+            
+            <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div>
+                    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 glassmorphism h-full">
+                        <h3 class="text-2xl font-bold font-montserrat mb-6">Get In Touch</h3>
+                        
+                        <form>
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
+                                <input type="text" id="name" class="form-input" placeholder="John Doe">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                                <input type="email" id="email" class="form-input" placeholder="john@example.com">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                                <input type="text" id="subject" class="form-input" placeholder="Inquiry about admission">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                                <textarea id="message" rows="4" class="form-textarea" placeholder="Your message here..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary w-full">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden h-full flex flex-col glassmorphism">
+                        <!-- Map -->
+                        <div class="h-64 sm:h-80" id="school-map"></div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold font-montserrat mb-6">Contact Information</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-semibold">Address</h4>
+                                        <p class="text-gray-600 dark:text-gray-300">Athurugiriya Road, Homagama, Sri Lanka</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-semibold">Phone</h4>
+                                        <p class="text-gray-600 dark:text-gray-300">+94 11 555 1234</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-semibold">Email</h4>
+                                        <p class="text-gray-600 dark:text-gray-300">info@homagamavidyalaya.lk</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-lg font-semibold">Office Hours</h4>
+                                        <p class="text-gray-600 dark:text-gray-300">Monday - Friday: 8:00 AM - 3:30 PM</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <h4 class="text-lg font-semibold mb-2">Follow Us</h4>
+                                <div class="flex space-x-4">
+                                    <a href="#" class="social-icon-large">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                                    </a>
+                                    <a href="#" class="social-icon-large">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                    </a>
+                                    <a href="#" class="social-icon-large">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                                    </a>
+                                    <a href="#" class="social-icon-large">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-20 pb-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">HMV</div>
+                        <span class="text-2xl font-bold font-montserrat">Homagama</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Homagama Maha Vidyalaya offers classes from Grades 1 to 11, providing a comprehensive education to 2,376 students.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="footer-social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="#" class="footer-social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="#" class="footer-social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                        </a>
+                        <a href="#" class="footer-social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6 relative footer-heading">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="footer-link">Home</a></li>
+                        <li><a href="#about" class="footer-link">About Us</a></li>
+                        <li><a href="#gallery" class="footer-link">Gallery</a></li>
+                        <li><a href="#news" class="footer-link">Latest News</a></li>
+                        <li><a href="#contact" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6 relative footer-heading">Useful Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="footer-link">Admission</a></li>
+                        <li><a href="#" class="footer-link">Academic Calendar</a></li>
+                        <li><a href="#" class="footer-link">Examination Schedule</a></li>
+                        <li><a href="#" class="footer-link">School Policies</a></li>
+                        <li><a href="#" class="footer-link">Career Opportunities</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6 relative footer-heading">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to our newsletter to get the latest updates directly in your inbox.</p>
+                    <form>
+                        <div class="flex">
+                            <input type="email" placeholder="Your email address" class="py-2 px-4 rounded-l-md w-full bg-gray-800 text-white border-0 focus:ring-2 focus:ring-primary">
+                            <button type="submit" class="bg-primary hover:bg-primary-dark py-2 px-4 rounded-r-md text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <hr class="border-gray-800 my-10">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400">© 2025 Homagama Maha Vidyalaya. All rights reserved.</p>
+                <div class="mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white mx-2">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white mx-2">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back to Top Button -->
+        <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary text-white p-2 rounded-full shadow-lg z-50 opacity-0 transition-opacity duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
+        </button>
+    </footer>
+
+    <!-- CSS File -->
+    <script>
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Custom Styles */
+            body {
+                scroll-behavior: smooth;
+            }
+            
+            /* Glassmorphism */
+            .glassmorphism {
+                background-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            }
+            
+            .dark .glassmorphism {
+                background-color: rgba(17, 24, 39, 0.7);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            
+            /* Buttons */
+            .btn-primary {
+                display: inline-block;
+                background-color: #3B82F6;
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1);
+            }
+            
+            .btn-primary:hover {
+                background-color: #2563eb;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+            }
+            
+            .btn-secondary {
+                display: inline-block;
+                background-color: transparent;
+                color: #3B82F6;
+                border: 2px solid #3B82F6;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-secondary:hover {
+                background-color: #3B82F6;
+                color: white;
+                transform: translateY(-2px);
+            }
+            
+            /* Navigation */
+            .nav-link {
+                position: relative;
+                font-weight: 500;
+                padding: 0.5rem 0;
+                color: rgba(55, 65, 81, 0.9);
+                transition: color 0.3s ease;
+            }
+            
+            .dark .nav-link {
+                color: rgba(255, 255, 255, 0.8);
+            }
+            
+            .nav-link:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: #3B82F6;
+                transition: width 0.3s ease;
+            }
+            
+            .nav-link:hover, .nav-link.active {
+                color: #3B82F6;
+            }
+            
+            .nav-link:hover:after, .nav-link.active:after {
+                width: 100%;
+            }
+            
+            .mobile-nav-link {
+                display: block;
+                padding: 0.75rem 0;
+                font-weight: 500;
+                border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+                transition: color 0.3s ease;
+            }
+            
+            .dark .mobile-nav-link {
+                border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+            }
+            
+            .mobile-nav-link.active {
+                color: #3B82F6;
+                font-weight: 600;
+            }
+            
+            /* Hamburger Menu */
+            .hamburger {
+                width: 24px;
+                height: 18px;
+                position: relative;
+                cursor: pointer;
+            }
+            
+            .hamburger span {
+                display: block;
+                position: absolute;
+                height: 2px;
+                width: 100%;
+                background: currentColor;
+                border-radius: 4px;
+                opacity: 1;
+                left: 0;
+                transform: rotate(0deg);
+                transition: .25s ease-in-out;
+            }
+            
+            .hamburger span:nth-child(1) {
+                top: 0px;
+            }
+            
+            .hamburger span:nth-child(2) {
+                top: 8px;
+            }
+            
+            .hamburger span:nth-child(3) {
+                top: 16px;
+            }
+            
+            .hamburger.is-active span:nth-child(1) {
+                top: 8px;
+                transform: rotate(135deg);
+            }
+            
+            .hamburger.is-active span:nth-child(2) {
+                opacity: 0;
+                left: -60px;
+            }
+            
+            .hamburger.is-active span:nth-child(3) {
+                top: 8px;
+                transform: rotate(-135deg);
+            }
+            
+            /* Sections */
+            .section-title {
+                font-size: 2.25rem;
+                font-weight: 700;
+                text-align: center;
+                font-family: 'Montserrat', sans-serif;
+                margin-bottom: 0.5rem;
+                color: #111827;
+            }
+            
+            .dark .section-title {
+                color: #F9FAFB;
+            }
+            
+            .section-subtitle {
+                font-size: 1.125rem;
+                text-align: center;
+                color: #4B5563;
+                margin-bottom: 1.5rem;
+            }
+            
+            .dark .section-subtitle {
+                color: #D1D5DB;
+            }
+            
+            /* Statistics */
+            .stat-card {
+                text-align: center;
+                padding: 1rem;
+                background-color: white;
+                border-radius: 0.75rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .dark .stat-card {
+                background-color: #1F2937;
+            }
+            
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #3B82F6;
+                margin-bottom: 0.25rem;
+            }
+            
+            .stat-label {
+                color: #4B5563;
+                font-weight: 500;
+            }
+            
+            .dark .stat-label {
+                color: #D1D5DB;
+            }
+            
+            /* Feature Card */
+            .feature-card {
+                padding: 1.5rem;
+                background-color: white;
+                border-radius: 0.75rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .dark .feature-card {
+                background-color: #1F2937;
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            .icon-container {
+                height: 3rem;
+                width: 3rem;
+                border-radius: 0.5rem;
+                background-color: rgba(59, 130, 246, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #3B82F6;
+                margin-bottom: 1rem;
+            }
+            
+            .feature-title {
+                font-size: 1.125rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #111827;
+            }
+            
+            .dark .feature-title {
+                color: #F9FAFB;
+            }
+            
+            .feature-text {
+                color: #4B5563;
+                font-size: 0.875rem;
+            }
+            
+            .dark .feature-text {
+                color: #D1D5DB;
+            }
+            
+            /* Staff Card */
+            .staff-card {
+                background-color: white;
+                border-radius: 0.75rem;
+                overflow: hidden;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .dark .staff-card {
+                background-color: #1F2937;
+            }
+            
+            .staff-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            .social-icon {
+                height: 2rem;
+                width: 2rem;
+                border-radius: 9999px;
+                background-color: rgba(59, 130, 246, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #3B82F6;
+                transition: all 0.3s ease;
+            }
+            
+            .social-icon:hover {
+                background-color: #3B82F6;
+                color: white;
+            }
+            
+            .social-icon-large {
+                height: 2.5rem;
+                width: 2.5rem;
+                border-radius: 9999px;
+                background-color: rgba(59, 130, 246, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #3B82F6;
+                transition: all 0.3s ease;
+            }
+            
+            .social-icon-large:hover {
+                background-color: #3B82F6;
+                color: white;
+                transform: translateY(-3px);
+            }
+            
+            /* Gallery */
+            .gallery-filter {
+                padding: 0.5rem 1rem;
+                border-radius: 9999px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            
+            .gallery-filter.active {
+                background-color: #3B82F6;
+                color: white;
+            }
+            
+            /* News Card */
+            .news-card {
+                background-color: white;
+                border-radius: 0.75rem;
+                overflow: hidden;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                height: 100%;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .dark .news-card {
+                background-color: #1F2937;
+            }
+            
+            .news-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            /* Form Elements */
+            .form-input, .form-textarea {
+                width: 100%;
+                padding: 0.75rem;
+                border-radius: 0.375rem;
+                border: 1px solid #E5E7EB;
+                background-color: #F9FAFB;
+                transition: all 0.3s ease;
+            }
+            
+            .dark .form-input, .dark .form-textarea {
+                background-color: #374151;
+                border-color: #4B5563;
+                color: white;
+            }
+            
+            .form-input:focus, .form-textarea:focus {
+                outline: none;
+                border-color: #3B82F6;
+                ring: 2px;
+                ring-color: #3B82F6;
+            }
+            
+            /* Footer */
+            .footer-heading:after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 50px;
+                height: 2px;
+                background-color: #3B82F6;
+            }
+            
+            .footer-link {
+                color: #D1D5DB;
+                transition: color 0.3s ease, transform 0.3s ease;
+                display: inline-block;
+            }
+            
+            .footer-link:hover {
+                color: white;
+                transform: translateX(5px);
+            }
+            
+            .footer-social-icon {
+                color: #D1D5DB;
+                transition: color 0.3s ease;
+            }
+            
+            .footer-social-icon:hover {
+                color: white;
+            }
+            
+            /* Loading Animation */
+            #loader {
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+            
+            .loader-container {
+                text-align: center;
+            }
+            
+            .day-night-cycle {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                margin: 0 auto;
+                background: linear-gradient(to bottom, #3B82F6, #F59E0B);
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+                animation: dayNightCycle 3s infinite alternate;
+            }
+            
+            @keyframes dayNightCycle {
+                0% {
+                    background: linear-gradient(to bottom, #0F172A, #1E3A8A);
+                    box-shadow: 0 0 30px rgba(30, 58, 138, 0.5);
+                }
+                50% {
+                    background: linear-gradient(to bottom, #F97316, #FDE68A);
+                    box-shadow: 0 0 50px rgba(249, 115, 22, 0.7);
+                }
+                100% {
+                    background: linear-gradient(to bottom, #60A5FA, #93C5FD);
+                    box-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+                }
+            }
+            
+            .school-building {
+                width: 120px;
+                height: 60px;
+                background-color: #3B82F6;
+                margin: 20px auto 0;
+                position: relative;
+                border-radius: 5px 5px 0 0;
+            }
+            
+            .school-building:before {
+                content: '';
+                position: absolute;
+                top: -20px;
+                left: 30px;
+                border-left: 30px solid transparent;
+                border-right: 30px solid transparent;
+                border-bottom: 20px solid #3B82F6;
+            }
+            
+            .school-building:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 10px;
+                width: 20px;
+                height: 30px;
+                background-color: #1E3A8A;
+                border-radius: 5px 5px 0 0;
+            }
+            
+            .loading-bar {
+                width: 200px;
+                height: 6px;
+                background-color: rgba(156, 163, 175, 0.3);
+                border-radius: 3px;
+                overflow: hidden;
+                margin: 0 auto;
+            }
+            
+            .loading-progress {
+                height: 100%;
+                width: 0%;
+                background-color: #3B82F6;
+                border-radius: 3px;
+                animation: loading 2s ease-in-out forwards;
+            }
+            
+            @keyframes loading {
+                0% { width: 0%; }
+                100% { width: 100%; }
+            }
+            
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+            
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                background: #3B82F6;
+                border-radius: 5px;
+            }
+            
+            ::-webkit-scrollbar-thumb:hover {
+                background: #2563eb;
+            }
+            
+            .dark ::-webkit-scrollbar-track {
+                background: #374151;
+            }
+            
+            /* Swiper Customization */
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: #3B82F6 !important;
+                background-color: white;
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 50%;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+            
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 20px !important;
+            }
+            
+            .dark .swiper-button-next,
+            .dark .swiper-button-prev {
+                background-color: #1F2937;
+            }
+            
+            .swiper-pagination-bullet-active {
+                background-color: #3B82F6 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Main JavaScript -->
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Loading Animation
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                document.body.style.overflow = 'auto';
+            }, 2500);
+            
+            // Animated Counter
+            const statValues = document.querySelectorAll('.stat-value');
+            
+            function animateCounter(el) {
+                const target = parseInt(el.getAttribute('data-count'));
+                const duration = 2000;
+                const step = target / duration * 10;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    el.textContent = Math.floor(current);
+                    
+                    if (current >= target) {
+                        el.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, 10);
+            }
+            
+            // Initialize GSAP Animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Section title animations
+            gsap.utils.toArray('.section-title').forEach(title => {
+                gsap.from(title, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Feature card animations
+            gsap.utils.toArray('.feature-card').forEach((card, index) => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.5,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Staff card animations
+            gsap.utils.toArray('.staff-card').forEach((card, index) => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.5,
+                    delay: index * 0.2,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Gallery item animations
+            gsap.utils.toArray('.gallery-item').forEach((item, index) => {
+                gsap.from(item, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.5,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Stat card animations with counter
+            gsap.utils.toArray('.stat-card').forEach((card, index) => {
+                gsap.from(card, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.5,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        onEnter: () => {
+                            const statValue = card.querySelector('.stat-value');
+                            animateCounter(statValue);
+                        },
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+            
+            // Three.js School Building Model
+            function init3DModel() {
+                // Check if WebGL is available
+                if (!document.getElementById('hero-model')) return;
+                
+                const container = document.getElementById('hero-model');
+                
+                // Create scene
+                const scene = new THREE.Scene();
+                
+                // Create camera
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 5;
+                
+                // Create renderer
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                container.appendChild(renderer.domElement);
+                
+                // Create school building (simplified)
+                const geometry = new THREE.BoxGeometry(2, 1, 1);
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: 0x3B82F6,
+                    metalness: 0.2,
+                    roughness: 0.5
+                });
+                const building = new THREE.Mesh(geometry, material);
+                scene.add(building);
+                
+                // Create roof
+                const roofGeometry = new THREE.ConeGeometry(1.5, 1, 4);
+                const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x2563EB });
+                const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+                roof.position.y = 1;
+                roof.rotation.y = Math.PI / 4;
+                scene.add(roof);
+                
+                // Add windows
+                for (let i = 0; i < 4; i++) {
+                    const windowGeometry = new THREE.PlaneGeometry(0.3, 0.3);
+                    const windowMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+                    const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+                    
+                    windowMesh.position.x = (i % 2 === 0) ? -0.5 : 0.5;
+                    windowMesh.position.y = (i < 2) ? 0.2 : -0.2;
+                    windowMesh.position.z = 0.51;
+                    
+                    building.add(windowMesh);
+                }
+                
+                // Add lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                });
+                
+                // Animation loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    building.rotation.y += 0.005;
+                    roof.rotation.y += 0.005;
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Initialize Three.js
+            init3DModel();
+            
+            // Initialize Typed.js
+            const typedTexts = ["A Beacon of Education and Excellence", "Nurturing Minds, Shaping Futures", "Building Character, Cultivating Leadership"];
+            
+            new Typed('#typed-text', {
+                strings: typedTexts,
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                startDelay: 500,
+                loop: true
+            });
+            
+            // Initialize Swiper
+            const newsSwiper = new Swiper('.news-slider', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev'
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2
+                    },
+                    1024: {
+                        slidesPerView: 3
+                    }
+                }
+            });
+            
+            // Gallery Filter
+            const galleryFilters = document.querySelectorAll('.gallery-filter');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all filters
+                    galleryFilters.forEach(f => f.classList.remove('active'));
+                    
+                    // Add active class to current filter
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Show/hide items based on filter
+                    galleryItems.forEach(item => {
+                        if (filterValue === 'all' || item.classList.contains(filterValue)) {
+                            gsap.to(item, { 
+                                opacity: 1, 
+                                y: 0, 
+                                duration: 0.3,
+                                ease: 'power1.out',
+                                onComplete: () => item.style.display = 'block'
+                            });
+                        } else {
+                            gsap.to(item, { 
+                                opacity: 0, 
+                                y: 20, 
+                                duration: 0.3,
+                                ease: 'power1.in',
+                                onComplete: () => item.style.display = 'none'
+                            });
+                        }
+                    });
+                });
+            });
+            
+            // Initialize Mapbox
+            function initMap() {
+                mapboxgl.accessToken = 'pk.eyJ1IjoiZXhhbXBsZXVzZXIiLCJhIjoiY2xzamloaDkyMHo1NjJrbzhzZmJzcG1sYiJ9._hbhBE6A3BO2w5nPmS3xKA';
+                
+                const map = new mapboxgl.Map({
+                    container: 'school-map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [79.8612, 6.8500], // Approximate coordinates for Homagama
+                    zoom: 15
+                });
+                
+                // Add school marker
+                const marker = new mapboxgl.Marker({
+                    color: '#3B82F6'
+                })
+                    .setLngLat([79.8612, 6.8500]) // Approximate coordinates for Homagama
+                    .setPopup(new mapboxgl.Popup().setHTML('<h3>Homagama Maha Vidyalaya</h3><p>Athurugiriya Road, Homagama</p>'))
+                    .addTo(map);
+                
+                // Add navigation controls
+                map.addControl(new mapboxgl.NavigationControl());
+                
+                // Open popup by default
+                marker.togglePopup();
+            }
+            
+            // Initialize map if element exists
+            if (document.getElementById('school-map')) {
+                initMap();
+            }
+            
+            // Back to Top Button
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.style.opacity = '1';
+                } else {
+                    backToTopButton.style.opacity = '0';
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Dark Mode Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            // Check for saved theme preference or use system preference
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                html.classList.add('dark');
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                
+                // Save preference
+                if (html.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+            
+            // PWA Setup
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then(registration => {
+                            console.log('ServiceWorker registration successful');
+                        })
+                        .catch(error => {
+                            console.error('ServiceWorker registration failed: ', error);
+                        });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
