@@ -1,95 +1,176 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Card from '../components/Card';
-
-const sampleNewsData = [
-  { id: 'news1', title: 'School Annual Day: A Grand Success', description: 'Our annual day was celebrated with great enthusiasm, showcasing student talents.', category: 'Events', date: '2023-11-15', imageUrl: 'https://via.placeholder.com/350x180/FFD700/000000?text=Annual+Day' },
-  { id: 'news2', title: 'Science Exhibition Winners', description: 'Students from Grade 10 won the inter-school science exhibition.', category: 'Academics', date: '2023-11-10', imageUrl: 'https://via.placeholder.com/350x180/ADD8E6/000000?text=Science+Fair' },
-  { id: 'news3', title: 'Basketball Team Reaches Finals', description: 'Our school basketball team has made it to the city championship finals!', category: 'Sports', date: '2023-11-05', imageUrl: 'https://via.placeholder.com/350x180/90EE90/000000?text=Basketball' },
-  { id: 'news4', title: 'New Library Wing Inaugurated', description: 'A new state-of-the-art library wing is now open for students.', category: 'Campus Life', date: '2023-10-28', videoUrl: 'placeholder_video_id' },
-  { id: 'news5', title: 'Parent-Teacher Meeting Schedule', description: 'The upcoming parent-teacher meeting schedule for all grades has been announced.', category: 'Academics', date: '2023-11-20' },
-  { id: 'news6', title: 'Art Competition Highlights', description: 'Students displayed incredible creativity at the annual art competition.', category: 'Events', date: '2023-10-22', imageUrl: 'https://via.placeholder.com/350x180/E6E6FA/000000?text=Art+Comp' },
-];
-
-const newsCategories = ['All', ...new Set(sampleNewsData.map(item => item.category))];
+import { supabase } from '../supabaseClient';
+import { Helmet } from 'react-helmet'; // Import Helmet
 
 const NewsPage = () => {
+  const [newsArticles, setNewsArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [categories, setCategories] = useState(['All']);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredNews = useMemo(() => {
-    if (selectedCategory === 'All') {
-      return sampleNewsData;
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+  };
+
+  const fetchNews = useCallback(async (currentSearchTerm, currentCategory) => {
+    // console.log('Fetching news with:', currentSearchTerm, currentCategory);
+    setLoading(true);
+    setError(null);
+    try {
+      let query = supabase
+        .from('news')
+        .select('*')
+        .order('published_date', { ascending: false });
+
+      if (currentCategory !== 'All') {
+        query = query.eq('category', currentCategory);
+      }
+      if (currentSearchTerm) {
+        query = query.or(`title.ilike.%${currentSearchTerm}%,content.ilike.%${currentSearchTerm}%,excerpt.ilike.%${currentSearchTerm}%`);
+      }
+      const { data, error: fetchError } = await query;
+      if (fetchError) throw fetchError;
+      setNewsArticles(data || []);
+    } catch (e) {
+      console.error('Error fetching news:', e);
+      setError(e.message || 'Failed to fetch news articles.');
+      setNewsArticles([]);
+    } finally {
+      setLoading(false);
     }
-    return sampleNewsData.filter(news => news.category === selectedCategory);
-  }, [selectedCategory]);
+  }, []); // Removed categories.length from dependencies as it's handled separately
 
-  const pageStyle = {
-    padding: '1rem 2rem', // More padding for page container
-    color: 'var(--text-color)'
-  };
+  const debouncedFetchNews = useCallback(debounce(fetchNews, 500), [fetchNews]);
 
-  const gridStyle = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '1.5rem', // Increased gap
-    justifyContent: 'flex-start', // Align to start
-    marginTop: '1rem',
-  };
+  useEffect(() => {
+    fetchNews(searchTerm, selectedCategory);
+  }, [selectedCategory, fetchNews]); // fetchNews dependency is stable due to useCallback
 
-  const filterContainerStyle = {
-    marginBottom: '1.5rem',
-    display: 'flex',
-    gap: '0.5rem',
-    flexWrap: 'wrap',
-  };
+  useEffect(() => {
+    debouncedFetchNews(searchTerm, selectedCategory);
+  }, [searchTerm, selectedCategory, debouncedFetchNews]);
 
-  const filterButtonStyle = (isActive) => ({
-    padding: '0.5rem 1rem',
-    cursor: 'pointer',
+  // Fetch initial categories
+  useEffect(() => {
+    const fetchInitialCategories = async () => {
+      try {
+        // Fetch distinct categories. This might be slow on very large tables without an index on category.
+        // A separate 'categories' table or a Supabase function could optimize this.
+        const { data, error } = await supabase.rpc('distinct_categories', { table_name: 'news' });
+
+        if (error) throw error;
+        const uniqueCategories = ['All', ...new Set((data || []).map(item => item.category).filter(Boolean))];
+        setCategories(uniqueCategories);
+      } catch (catError) {
+        console.error("Error fetching categories:", catError);
+        // Fallback or keep existing categories if RPC fails
+      }
+    };
+
+    fetchInitialCategories();
+  }, []);
+
+  // Real-time subscription
+  useEffect(() => {
+    const newsSubscription = supabase
+      .channel('public:news') // Unique channel name
+      .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'news' },
+          (payload) => {
+            console.log('News change received!', payload);
+            // Simple approach: refetch news with current filters
+            // This ensures consistency with current search/filter state
+            fetchNews(searchTerm, selectedCategory);
+
+            // Also refetch categories in case a new one was added or an old one removed
+            // This can be optimized further to only refetch categories if a category field changed
+             const fetchDynamicCategories = async () => {
+                try {
+                    const { data, error } = await supabase.rpc('distinct_categories', { table_name: 'news' });
+                    if (error) throw error;
+                    const uniqueCategories = ['All', ...new Set((data || []).map(item => item.category).filter(Boolean))];
+                    setCategories(uniqueCategories);
+                } catch (catError) { console.error("Error refetching categories:", catError); }
+            };
+            fetchDynamicCategories();
+          }
+      )
+      .subscribe((status, err) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Subscribed to news changes!');
+        }
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          console.error(`Subscription Error: ${status}`, err);
+          setError(`Real-time connection error (${status}). Please refresh.`);
+        }
+      });
+
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(newsSubscription);
+    };
+  }, [supabase, fetchNews, searchTerm, selectedCategory]); // Include dependencies that fetchNews relies on for its context
+
+
+  const pageStyle = { padding: '1rem 2rem', color: 'var(--text-color)' };
+  const controlsContainerStyle = { display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap', alignItems: 'center' };
+  const searchInputStyle = { padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', minWidth: '250px' };
+  const filterContainerStyle = { display: 'flex', gap: '0.5rem', flexWrap: 'wrap' };
+  let filterButtonStyle = (isActive) => ({ /* ... same style ... */ });
+  filterButtonStyle.toString = () => 'filterButtonStyle'; // For logging if needed
+  const gridStyle = { display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'flex-start', marginTop: '1rem' };
+
+  filterButtonStyle = (isActive) => ({
+    padding: '0.5rem 1rem', cursor: 'pointer',
     backgroundColor: isActive ? 'var(--text-color)' : 'var(--card-bg-color)',
     color: isActive ? 'var(--background-color)' : 'var(--text-color)',
     border: `1px solid ${isActive ? 'var(--text-color)' : 'var(--border-color)'}`,
-    borderRadius: '5px',
-    transition: 'background-color 0.3s ease, color 0.3s ease',
+    borderRadius: '5px', transition: 'background-color 0.3s ease, color 0.3s ease',
   });
+
 
   return (
     <div style={pageStyle}>
+      <Helmet>
+        <title>Latest News - School Name</title>
+        <meta name="description" content="Stay updated with the latest news and announcements from Our School." />
+        <meta property="og:title" content="Latest News - School Name" />
+        <meta property="og:description" content="Stay updated with the latest news and announcements from Our School." />
+      </Helmet>
       <h1>Latest News</h1>
-
-      <div style={filterContainerStyle}>
-        {newsCategories.map(category => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            style={filterButtonStyle(selectedCategory === category)}
-          >
-            {category}
-          </button>
-        ))}
+      <div style={controlsContainerStyle}>
+        <input type="search" placeholder="Search news..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={searchInputStyle}/>
+        <div style={filterContainerStyle}>
+          {categories.map(category => (
+            <button key={category} onClick={() => setSelectedCategory(category)} style={filterButtonStyle(selectedCategory === category)}>
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
-
-      {filteredNews.length > 0 ? (
+      {loading && <p>Loading news articles...</p>}
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {!loading && !error && newsArticles.length === 0 && <p>No news items found.</p>}
+      {!loading && !error && newsArticles.length > 0 && (
         <div style={gridStyle}>
-          {filteredNews.map(newsItem => (
-            <Card
-              key={newsItem.id}
-              type="news"
-              id={newsItem.id}
-              title={newsItem.title}
-              description={newsItem.description}
+          {newsArticles.map(newsItem => (
+            <Card key={newsItem.id} type="news" id={newsItem.slug || newsItem.id} title={newsItem.title}
+              description={newsItem.excerpt || (newsItem.content ? newsItem.content.substring(0,100)+'...' : '')}
               category={newsItem.category}
-              date={newsItem.date}
-              imageUrl={newsItem.imageUrl}
-              videoUrl={newsItem.videoUrl}
+              date={newsItem.published_date ? new Date(newsItem.published_date).toLocaleDateString() : (newsItem.created_at ? new Date(newsItem.created_at).toLocaleDateString() : '')}
+              imageUrl={newsItem.image_url} videoUrl={newsItem.video_url} linkTo={`/news/${newsItem.slug || newsItem.id}`}
             />
           ))}
         </div>
-      ) : (
-        <p>No news items found for the selected category.</p>
       )}
-      {/* Placeholder for pagination: <PaginationComponent totalItems={filteredNews.length} itemsPerPage={6} /> */}
     </div>
   );
 };
-
 export default NewsPage;

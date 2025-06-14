@@ -1,31 +1,35 @@
-import React, { useState, useEffect } from 'react'; // Added useState, useEffect
+import React, { useState, useEffect } from 'react';
 import AppRouter from './routes/AppRouter';
 import { ThemeProvider } from './contexts/ThemeContext';
-import Preloader from './components/Preloader'; // Import Preloader
+import { AuthProvider } from './contexts/AuthContext';
+import Preloader from './components/Preloader';
+import ErrorBoundary from './components/ErrorBoundary'; // Import ErrorBoundary
 import './App.css';
 import './styles/theme.css';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true); // Basic loading state
+  const [isAppLoading, setIsAppLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate app loading time
     const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500); // Adjust time as needed
+      setIsAppLoading(false);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <ThemeProvider>
-      <Preloader isLoading={isLoading} />
-      {/* AnimatePresence could wrap AppRouter if Preloader is outside it and we want AppRouter to animate in after Preloader */}
-      {!isLoading && ( // Render AppRouter only when not loading
-        <div className="App">
-          <AppRouter />
-        </div>
-      )}
-    </ThemeProvider>
+    <ErrorBoundary> {/* Wrap the entire application or key parts */}
+      <ThemeProvider>
+        <AuthProvider>
+          <Preloader isLoading={isAppLoading} />
+          {!isAppLoading && (
+            <div className="App">
+              <AppRouter />
+            </div>
+          )}
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

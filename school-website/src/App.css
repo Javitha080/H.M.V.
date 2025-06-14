@@ -12,3 +12,105 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
+
+/* Basic Responsive Global Styles */
+body {
+  font-size: 16px; /* Base font size */
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Example: Responsive adjustments for card grids if not handled by flex properties already */
+/* This is a general example, specific grid styles in NewsPage/EventsPage might need tweaking */
+@media (max-width: 767px) {
+  /* In NewsPage.js and EventsPage.js, the gridStyle already uses flexWrap: 'wrap'.
+     Individual cards (Card.js) have maxWidth: '350px'.
+     This should naturally make them stack on smaller screens.
+     If more direct control is needed, specific classes could be targeted.
+     For example, if gridStyle was a class .card-grid:
+  .card-grid {
+    justify-content: center; // Center cards on mobile if they don't fill width
+  }
+  .card-grid > * { // Target children of grid (the cards)
+    width: 90%; // Example: make cards take more width on mobile
+    margin-left: auto;
+    margin-right: auto;
+  }
+  */
+
+  /* Adjust Hero Section text sizes for mobile */
+  .hero-section h1 { /* Assuming HeroSection.js uses a class or target its h1 */
+    font-size: 2rem !important; /* !important for overriding inline styles if necessary - better to use classes */
+  }
+  .hero-section p {
+    font-size: 1.1rem !important;
+  }
+
+  /* AdminLayout sidebar adjustments for mobile - basic example, could be toggleable */
+  /* This would require AdminLayout to use class names for its elements */
+  /*
+  .admin-layout-sidebar {
+    position: fixed;
+    left: -250px; // Hide off-screen
+    transition: left 0.3s ease;
+    z-index: 1100;
+    height: 100vh;
+  }
+  .admin-layout-sidebar.open {
+    left: 0;
+  }
+  .admin-layout-main-content {
+    margin-left: 0; // Full width when sidebar is hidden
+  }
+  */
+}
+
+/* Glassmorphism attempt on Card - subtle */
+/* This requires Card.js to have a specific class or for the styles to be applied to its motion.div */
+/* For example if Card.js root motion.div has className="themed-card" */
+/*
+.themed-card {
+  background-color: rgba(var(--card-bg-color-rgb), 0.7); // Needs --card-bg-color-rgb defined e.g. 255,255,255
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); // For Safari
+  border: 1px solid rgba(var(--border-color-rgb), 0.2); // Needs --border-color-rgb
+}
+
+:root {
+  // Example RGB versions of colors - these need to be defined for both light and dark themes
+  // --card-bg-color-rgb-light: 249,249,249;
+  // --border-color-rgb-light: 221,221,221;
+  // --card-bg-color-rgb-dark: 58,58,58;
+  // --border-color-rgb-dark: 85,85,85;
+}
+[data-theme="light"] {
+  // --card-bg-color-rgb: var(--card-bg-color-rgb-light);
+  // --border-color-rgb: var(--border-color-rgb-light);
+}
+[data-theme="dark"] {
+  // --card-bg-color-rgb: var(--card-bg-color-rgb-dark);
+  // --border-color-rgb: var(--border-color-rgb-dark);
+}
+*/
+
+/* Ensure touch targets are large enough */
+button, a[role="button"], input[type="button"], input[type="submit"] {
+  min-height: 44px; /* WCAG recommendation for touch targets */
+  min-width: 44px;  /* WCAG recommendation for touch targets */
+  display: inline-flex; /* Helps with centering content if needed */
+  align-items: center;
+  justify-content: center;
+}
+/* Adjust padding if min-height/width makes buttons too large visually */
+.compact-button { /* Example class for smaller buttons that still meet touch target */
+    min-height: auto;
+    min-width: auto;
+    padding: 0.5rem 0.8rem; /* Ensure padding contributes to tappable area */
+}
+
+/* Sticky Footer consideration: App.css already has .App { display: flex; flex-direction: column; min-height: 100vh; }
+   and AppRouter.js has <div style={{ flex: '1', ... }}> for main content area. This helps.
+*/
