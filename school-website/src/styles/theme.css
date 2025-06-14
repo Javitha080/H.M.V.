@@ -1,0 +1,44 @@
+/* Global Theme Variables */
+:root {
+  --background-light: #ffffff;
+  --text-light: #333333;
+  --header-bg-light: #f0f0f0;
+  --card-bg-light: #f9f9f9;
+  --border-color-light: #dddddd;
+
+  --background-dark: #1a1a1a;
+  --text-dark: #f0f0f0;
+  --header-bg-dark: #2c2c2c;
+  --card-bg-dark: #3a3a3a;
+  --border-color-dark: #555555;
+}
+
+[data-theme="light"] {
+  --background-color: var(--background-light);
+  --text-color: var(--text-light);
+  --header-bg-color: var(--header-bg-light);
+  --card-bg-color: var(--card-bg-light);
+  --border-color: var(--border-color-light);
+}
+
+[data-theme="dark"] {
+  --background-color: var(--background-dark);
+  --text-color: var(--text-dark);
+  --header-bg-color: var(--header-bg-dark);
+  --card-bg-color: var(--card-bg-dark);
+  --border-color: var(--border-color-dark);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Update Header and Footer to use theme variables */
+/* This will be done by modifying their styles directly or by applying classes */
+
+/* Card specific styles */
+.card-link {
+  text-decoration: none; /* Remove underline from link */
+}
